@@ -17,8 +17,6 @@ class ClickerPrinter:
         return input(self._str_to_print_format(string))
 
 
-
-
 class ClickerSettingsCollector:
     LEFT_OPTIONS = ('l', 'L', '1', '')
     LEFT_CLICK = 'left'
@@ -27,19 +25,16 @@ class ClickerSettingsCollector:
     START_HOTKEY = 'Ctrl + 1'
     TOGGLE_MOUSE_HOTKEY = 'Ctrl + 2'
 
-
     def __init__(self):
         self._printer = ClickerPrinter()
         self._set_delay()
         self._set_mouse_btn()
         self._print_start_text()
 
-
     def _set_delay(self):
         raw_delay = self._printer.custom_input('Укажите задержку в миллисекундах: ')
         if not raw_delay: raw_delay = 1
         self.delay = float(raw_delay) / 1000
-
 
     def _set_mouse_btn(self):
         raw_mouse_btn = self._printer.custom_input(f'Выберите кнопку мыши 1 или 2: ')
@@ -51,9 +46,6 @@ class ClickerSettingsCollector:
         self._printer.custom_print(f'Для запуска кликера нажмите: {self.START_HOTKEY}')
         self._printer.custom_print(f'Для смены кнопки мыши нажмите: {self.TOGGLE_MOUSE_HOTKEY}')
 
-    
-
-
 
 class Clicker(threading.Thread):
     _settings = ClickerSettingsCollector()
@@ -61,11 +53,9 @@ class Clicker(threading.Thread):
     all_click_counter = 0
     is_run = False
     
-    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.click_counter = 0
-
 
     def run(self):
         while self.is_run:
@@ -83,15 +73,11 @@ class Clicker(threading.Thread):
         clicker = Clicker(daemon=True)
         clicker.start()
 
-
-
-
     @classmethod
     def run_switcher(cls):
         cls.is_run = False if cls.is_run else True
         cls.print_change_run_state()
         return not cls.is_run
-
 
     @classmethod
     def print_change_run_state(cls):
@@ -100,10 +86,6 @@ class Clicker(threading.Thread):
         if not cls.is_run:
             cls._printer.custom_print(f'Всего кликов сделано: {cls.all_click_counter} | Задержка: {cls._settings.delay}сек. | Кнопка: {cls._settings.mouse_btn}')
 
-
-            
-
-
     @classmethod
     def toggle_mouse_btn(cls):
         if cls._settings.mouse_btn == cls._settings.LEFT_CLICK: 
@@ -111,22 +93,12 @@ class Clicker(threading.Thread):
         else:
             cls._settings.mouse_btn = cls._settings.LEFT_CLICK
         cls._printer.custom_print(f'Изменил кнопку мыши на: {cls._settings.mouse_btn}')
-        
-
-
-
-
-
-
 
 
 def main():
-    
     keyboard.add_hotkey(ClickerSettingsCollector.START_HOTKEY, lambda: Clicker.start_clicker())
     keyboard.add_hotkey(ClickerSettingsCollector.TOGGLE_MOUSE_HOTKEY, lambda: Clicker.toggle_mouse_btn())
-
     keyboard.wait()
-
 
 
 if __name__ == '__main__':
